@@ -68,7 +68,6 @@ function Test() {
                                 <div className="list-group">
                                     <div className="list-group-item mb-10 mt-10">
                                         <label className="fw-900">Color</label>
-                                        <VendorFilter />
                                         <label className="fw-900 mt-15">Item Condition</label>
                                         <SizeFilter />
                                     </div>

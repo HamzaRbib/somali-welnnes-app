@@ -99,7 +99,6 @@ const ProductsList = ({ products, productFilters, fetchProduct }) => {
                                             <label className="fw-900">
                                                 Color
                                             </label>
-                                            <VendorFilter />
                                             <label className="fw-900 mt-15">
                                                 Item Condition
                                             </label>
