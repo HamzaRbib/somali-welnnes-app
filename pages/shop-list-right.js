@@ -7,7 +7,6 @@ import PriceRangeSlider from "./../components/ecommerce/Filter/PriceRangeSlider"
 import ShowSelect from "./../components/ecommerce/Filter/ShowSelect";
 import SizeFilter from "./../components/ecommerce/Filter/SizeFilter";
 import SortSelect from "./../components/ecommerce/Filter/SortSelect";
-import VendorFilter from "./../components/ecommerce/Filter/VendorFilter";
 import Pagination from "./../components/ecommerce/Pagination";
 import QuickView from "./../components/ecommerce/QuickView";
 import SingleProductList from "./../components/ecommerce/SingleProductList";

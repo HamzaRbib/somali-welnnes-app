@@ -7,7 +7,6 @@ import Breadcrumb2 from "../components/layout/Breadcrumb2";
 import CategoryProduct from "./../components/ecommerce/Filter/CategoryProduct";
 import PriceRangeSlider from "./../components/ecommerce/Filter/PriceRangeSlider";
 import SizeFilter from "./../components/ecommerce/Filter/SizeFilter";
-import VendorFilter from "./../components/ecommerce/Filter/VendorFilter";
 import Pagination from "./../components/ecommerce/Pagination";
 import QuickView from "./../components/ecommerce/QuickView";
 import SingleProduct from "./../components/ecommerce/SingleProduct";
