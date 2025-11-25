@@ -52,10 +52,10 @@ const PriceRangeSlider = ({ updateProductFilters }) => {
 
             <div className="d-flex justify-content-between">
                 <span>
-                    {price.value.min}
+                    {price.value.min} $
                 </span>
                 <span>
-                    {price.value.max}
+                    {price.value.max} $
                 </span>
             </div>
 

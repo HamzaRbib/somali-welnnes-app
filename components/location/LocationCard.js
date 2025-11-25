@@ -84,7 +84,7 @@ export default function AddressDropdown() {
 
   return (
     <>
-      <div style={{ maxWidth: 360 }}>
+      <div >
         {/* Dropdown trigger */}
         <Dropdown key={selectedValue}>
           <DropdownTrigger disableRipple>

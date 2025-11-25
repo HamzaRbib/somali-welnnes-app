@@ -22,7 +22,7 @@ const Deals1 = ({ product, addToCart }) => {
                 </div>
                 <div className="product-content-wrap">
                     <div className="deals-countdown-wrap">
-                        <Timer endDateTime="2024-11-27 00:00:00" />
+                        <Timer endDateTime="2025-11-27 00:00:00" />
                     </div>
                     <div className="deals-content">
                         <h2>
@@ -38,10 +38,7 @@ const Deals1 = ({ product, addToCart }) => {
                         </div>
                         <div>
                             <span className="font-small text-muted">
-                                By{" "}
-                                <Link href="/vendor/1">
-                                    NestFood
-                                </Link>
+                                500 gram
                             </span>
                         </div>
                         <div className="product-card-bottom">

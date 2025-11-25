@@ -32,50 +32,50 @@ const CategoryProduct3 = ({ updateProductCategory }) => {
                 <li onClick={(e) => selectCategory(e, "jeans")}>
                     <a>
                         <img
-                            src="/assets/imgs/theme/icons/category-1.svg"
+                            src="/assets/imgs/theme/icons/category-6.png"
                             alt="nest"
                         />
-                        Milks & Dairies
+                        CREAM
                     </a>
 
                 </li>
                 <li onClick={(e) => selectCategory(e, "shoe")}>
                     <a>
                         <img
-                            src="/assets/imgs/theme/icons/category-2.svg"
+                            src="/assets/imgs/theme/icons/category-7.png"
                             alt="nest"
                         />
-                        Clothing
+                        MALAB
                     </a>
 
                 </li>
                 <li onClick={(e) => selectCategory(e, "jacket")}>
                     <a>
                         <img
-                            src="/assets/imgs/theme/icons/category-3.svg"
+                            src="/assets/imgs/theme/icons/category-8.png"
                             alt="nest"
                         />
-                        Pet Foods{" "}
+                        SUPPLEMENT
                     </a>
 
                 </li>
                 <li onClick={(e) => selectCategory(e, "trousers")}>
                     <a>
                         <img
-                            src="/assets/imgs/theme/icons/category-4.svg"
+                            src="/assets/imgs/theme/icons/category-9.png"
                             alt="nest"
                         />
-                        Baking material
+                        OIL
                     </a>
 
                 </li>
                 <li onClick={(e) => selectCategory(e, "accessories")}>
                     <a>
                         <img
-                            src="/assets/imgs/theme/icons/category-5.svg"
+                            src="/assets/imgs/theme/icons/category-10.png"
                             alt="nest"
                         />
-                        Fresh Fruit
+                        TABLETS
                     </a>
                 </li>
             </ul>

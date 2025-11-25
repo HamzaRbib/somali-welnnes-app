@@ -7,7 +7,6 @@ import Search from "../ecommerce/Search";
 import LocationCard from "../location/LocationCard";
 import { logout } from "../../redux/action/auth";
 
-
 const Header = ({
   totalCartItems,
   totalCompareItems,
@@ -17,7 +16,7 @@ const Header = ({
   const [isToggled, setToggled] = useState(false);
   const [scroll, setScroll] = useState(0);
   const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector(state => state.auth);
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
     document.addEventListener("scroll", () => {
@@ -146,14 +145,17 @@ const Header = ({
                 </Link>
               </div>
               <div className="header-right">
+                <div
+                  className="search-location"
+                  style={{ width: "100%", maxWidth: "350px" }}
+                >
+                  <LocationCard />
+                </div>
                 <div className="search-style-2">
                   <Search />
                 </div>
                 <div className="header-action-right">
                   <div className="header-action-2">
-                    <div className="search-location">
-                      <LocationCard />
-                    </div>
                     <div className="header-action-icon-2">
                       <Link href="/shop-wishlist">
                         <img
@@ -194,32 +196,32 @@ const Header = ({
                         <span className="lable ml-0">Account</span>
                       </Link>
                       <div className="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
-                                                <ul>
-                                                    {isAuthenticated ? (
-                                                        <>
-                                                            <li>
-                                                                <Link href="/page-account">
-                                                                    <i className="fi fi-rs-user mr-10"></i>
-                                                                    My Account
-                                                                </Link>
-                                                            </li>
-                                                            <li>
-                                                                <a onClick={handleLogout} href="#">
-                                                                    <i className="fi fi-rs-sign-out mr-10"></i>
-                                                                    Sign out
-                                                                </a>
-                                                            </li>
-                                                        </>
-                                                    ) : (
-                                                        <li>
-                                                            <Link href="/page-login">
-                                                                <i className="fi fi-rs-sign-in mr-10"></i>
-                                                                Sign in
-                                                            </Link>
-                                                        </li>
-                                                    )}
-                                                </ul>
-                                            </div>
+                        <ul>
+                          {isAuthenticated ? (
+                            <>
+                              <li>
+                                <Link href="/page-account">
+                                  <i className="fi fi-rs-user mr-10"></i>
+                                  My Account
+                                </Link>
+                              </li>
+                              <li>
+                                <a onClick={handleLogout} href="#">
+                                  <i className="fi fi-rs-sign-out mr-10"></i>
+                                  Sign out
+                                </a>
+                              </li>
+                            </>
+                          ) : (
+                            <li>
+                              <Link href="/page-login">
+                                <i className="fi fi-rs-sign-in mr-10"></i>
+                                Sign in
+                              </Link>
+                            </li>
+                          )}
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -262,6 +264,10 @@ const Header = ({
                     <div className="d-flex categori-dropdown-inner">
                       <CategoryProduct2 />
                       <CategoryProduct3 />
+                    </div>
+                    <div className="more-categories">
+                      <span className="fi-rs-add mr-5 add-icon"></span>
+                      <p>More Categories</p>
                     </div>
                     <div
                       className="more_slide_open"
@@ -320,286 +326,30 @@ const Header = ({
                           src="/assets/imgs/theme/icons/icon-hot.svg"
                           alt="hot deals"
                         />
-                        <Link href="/products">Hot Deals</Link>
-                      </li>
+                        <Link href="/deals">Hot Deals</Link>
+                      </li>{" "}
                       <li>
                         <Link href="/" className="active">
                           Home
-                          <i className="fi-rs-angle-down"></i>
                         </Link>
-                        <ul className="sub-menu">
-                          <li>
-                            <Link href="/">Home 1</Link>
-                          </li>
-                          <li>
-                            <Link href="/index-2">Home 2</Link>
-                          </li>
-                          <li>
-                            <Link href="/index-3">Home 3</Link>
-                          </li>
-                          <li>
-                            <Link href="/index-4">Home 4</Link>
-                          </li>
-                        </ul>
                       </li>
                       <li>
-                        <Link href="/page-about">About</Link>
+                        <Link href="/products?cat=Supplements">
+                          Supplements
+                        </Link>
                       </li>
                       <li>
-                        <Link href="/shop-grid-right">
-                          Shop
-                          <i className="fi-rs-angle-down"></i>
+                        <Link href="/products?cat=Personal-Care">
+                          Personal Care
                         </Link>
-                        <ul className="sub-menu">
-                          <li>
-                            <Link href="/shop-grid-right">
-                              Shop Grid – Right Sidebar
-                            </Link>
-                          </li>
-                          <li>
-                            <Link href="/products">
-                              Shop Grid – Left Sidebar
-                            </Link>
-                          </li>
-                          <li>
-                            <Link href="/shop-list-right">
-                              Shop List – Right Sidebar
-                            </Link>
-                          </li>
-                          <li>
-                            <Link href="/shop-list-left">
-                              Shop List – Left Sidebar
-                            </Link>
-                          </li>
-                          <li>
-                            <Link href="/shop-fullwidth">Shop - Wide</Link>
-                          </li>
-                          <li>
-                            <Link href="/shop-filter">Shop - Filter</Link>
-                          </li>
-                          <li>
-                            <Link href="/shop-wishlist">Shop – Wishlist</Link>
-                          </li>
-                          <li>
-                            <Link href="/shop-cart">Shop – Cart</Link>
-                          </li>
-                          <li>
-                            <Link href="/shop-checkout">Shop – Checkout</Link>
-                          </li>
-                          <li>
-                            <Link href="/shop-compare">Shop – Compare</Link>
-                          </li>
-                        </ul>
                       </li>
-
-
-
-                      <li className="position-static">
-                        <Link href="/#">
-                          Mega menu
-                          <i className="fi-rs-angle-down"></i>
-                        </Link>
-                        <ul className="mega-menu">
-                          <li className="sub-mega-menu sub-mega-menu-width-22">
-                            <a className="menu-title" href="#">
-                              Fruit & Vegetables
-                            </a>
-                            <ul>
-                              <li>
-                                <a href="#">Meat & Poultry</a>
-                              </li>
-                              <li>
-                                <a href="#">Fresh Vegetables</a>
-                              </li>
-                              <li>
-                                <a href="#">Herbs & Seasonings</a>
-                              </li>
-                              <li>
-                                <a href="#">Cuts & Sprouts</a>
-                              </li>
-                              <li>
-                                <a href="#">Exotic Fruits & Veggies</a>
-                              </li>
-                              <li>
-                                <a href="#">Packaged Produce</a>
-                              </li>
-                            </ul>
-                          </li>
-                          <li className="sub-mega-menu sub-mega-menu-width-22">
-                            <a className="menu-title" href="#">
-                              Breakfast & Dairy
-                            </a>
-                            <ul>
-                              <li>
-                                <a href="#">Milk & Flavoured Milk</a>
-                              </li>
-                              <li>
-                                <a href="#">Butter and Margarine</a>
-                              </li>
-                              <li>
-                                <a href="#">Eggs Substitutes</a>
-                              </li>
-                              <li>
-                                <a href="#">Marmalades</a>
-                              </li>
-                              <li>
-                                <a href="#">Sour Cream</a>
-                              </li>
-                              <li>
-                                <a href="#">Cheese</a>
-                              </li>
-                            </ul>
-                          </li>
-                          <li className="sub-mega-menu sub-mega-menu-width-22">
-                            <a className="menu-title" href="#">
-                              Meat & Seafood
-                            </a>
-                            <ul>
-                              <li>
-                                <a href="#">Breakfast Sausage</a>
-                              </li>
-                              <li>
-                                <a href="#">Dinner Sausage</a>
-                              </li>
-                              <li>
-                                <a href="#">Chicken</a>
-                              </li>
-                              <li>
-                                <a href="#">Sliced Deli Meat</a>
-                              </li>
-                              <li>
-                                <a href="#">Wild Caught Fillets</a>
-                              </li>
-                              <li>
-                                <a href="#">Crab and Shellfish</a>
-                              </li>
-                            </ul>
-                          </li>
-                          <li className="sub-mega-menu sub-mega-menu-width-34">
-                            <div className="menu-banner-wrap">
-                              <a href="#">
-                                <img
-                                  src="/assets/imgs/banner/banner-menu.png"
-                                  alt="Nest"
-                                />
-                              </a>
-                              <div className="menu-banner-content">
-                                <h4>Hot deals</h4>
-                                <h3>
-                                  Don't miss
-                                  <br />
-                                  Trending
-                                </h3>
-                                <div className="menu-banner-price">
-                                  <span className="new-price text-success">
-                                    Save to 50%
-                                  </span>
-                                </div>
-                                <div className="menu-banner-btn">
-                                  <a href="#">Shop now</a>
-                                </div>
-                              </div>
-                              <div className="menu-banner-discount">
-                                <h3>
-                                  <span>25%</span>
-                                  off
-                                </h3>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
+                      <li className="products?cat=Healthy-Foods">
+                        <Link href="/#">Healthy Foods</Link>
                       </li>
                       <li>
-                        <Link href="/blog-category-grid">
-                          Blog
-                          <i className="fi-rs-angle-down"></i>
-                        </Link>
-                        <ul className="sub-menu">
-                          <li>
-                            <Link href="/blog-category-grid">
-                              Blog Category Grid
-                            </Link>
-                          </li>
-                          <li>
-                            <Link href="/blog-category-list">
-                              Blog Category List
-                            </Link>
-                          </li>
-                          <li>
-                            <Link href="/blog-category-big">
-                              Blog Category Big
-                            </Link>
-                          </li>
-                          <li>
-                            <Link href="/blog-category-fullwidth">
-                              Blog Category Wide
-                            </Link>
-                          </li>
-                          <li>
-                            <Link href="/#">
-                              Single Post
-                              <i className="fi-rs-angle-right"></i>
-                            </Link>
-                            <ul className="level-menu level-menu-modify">
-                              <li>
-                                <Link href="/blog-post-left">Left Sidebar</Link>
-                              </li>
-                              <li>
-                                <Link href="/blog-post-right">
-                                  Right Sidebar
-                                </Link>
-                              </li>
-                              <li>
-                                <Link href="/blog-post-fullwidth">
-                                  No Sidebar
-                                </Link>
-                              </li>
-                            </ul>
-                          </li>
-                        </ul>
+                        <Link href="/deals">Special Offers</Link>
                       </li>
-                      <li>
-                        <Link href="/#">
-                          Pages
-                          <i className="fi-rs-angle-down"></i>
-                        </Link>
-                        <ul className="sub-menu">
-                          <li>
-                            <Link href="/page-about">About Us</Link>
-                          </li>
-                          <li>
-                            <Link href="/page-contact">Contact</Link>
-                          </li>
-                          <li>
-                            <Link href="/page-account">My Account</Link>
-                          </li>
-                          <li>
-                            <Link href="/page-login">Login</Link>
-                          </li>
-                          <li>
-                            <Link href="/page-register">Register</Link>
-                          </li>
-                          <li>
-                            <Link href="/page-purchase-guide">
-                              Purchase Guide
-                            </Link>
-                          </li>
-                          <li>
-                            <Link href="/page-privacy-policy">
-                              Privacy Policy
-                            </Link>
-                          </li>
-                          <li>
-                            <Link href="/page-terms">Terms of Service</Link>
-                          </li>
-                          <li>
-                            <Link href="/page-404">404 Page</Link>
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        <Link href="/page-contact">Contact</Link>
-                      </li>
+                      <li></li>
                     </ul>
                   </nav>
                 </div>
@@ -611,7 +361,7 @@ const Header = ({
                 />
 
                 <p>
-                  1900 - 888<span>24/7 Support Center</span>
+                  610333366 - 610391010<span>24/7 Support Center</span>
                 </p>
               </div>
 
@@ -724,32 +474,32 @@ const Header = ({
                       />
                     </Link>
                     <div className="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
-                                                <ul>
-                                                    {isAuthenticated ? (
-                                                        <>
-                                                            <li>
-                                                                <Link href="/page-account">
-                                                                    <i className="fi fi-rs-user mr-10"></i>
-                                                                    My Account
-                                                                </Link>
-                                                            </li>
-                                                            <li>
-                                                                <a onClick={handleLogout} href="#">
-                                                                    <i className="fi fi-rs-sign-out mr-10"></i>
-                                                                    Sign out
-                                                                </a>
-                                                            </li>
-                                                        </>
-                                                    ) : (
-                                                        <li>
-                                                            <Link href="/page-login">
-                                                                <i className="fi fi-rs-sign-in mr-10"></i>
-                                                                Sign in
-                                                            </Link>
-                                                        </li>
-                                                    )}
-                                                </ul>
-                                            </div>
+                      <ul>
+                        {isAuthenticated ? (
+                          <>
+                            <li>
+                              <Link href="/page-account">
+                                <i className="fi fi-rs-user mr-10"></i>
+                                My Account
+                              </Link>
+                            </li>
+                            <li>
+                              <a onClick={handleLogout} href="#">
+                                <i className="fi fi-rs-sign-out mr-10"></i>
+                                Sign out
+                              </a>
+                            </li>
+                          </>
+                        ) : (
+                          <li>
+                            <Link href="/page-login">
+                              <i className="fi fi-rs-sign-in mr-10"></i>
+                              Sign in
+                            </Link>
+                          </li>
+                        )}
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -1,0 +1,22 @@
+.deals-product-cart-wrap {
+    .product-img-action-wrap {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-content-wrap {
+        position: relative;
+        padding: 10px;
+    }
+
+    .deals-countdown-wrap {
+        position: relative;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        padding: 10px;
+        background-color: #fff;
+        border-top: 1px solid #f0f0f0;
+    }
+}

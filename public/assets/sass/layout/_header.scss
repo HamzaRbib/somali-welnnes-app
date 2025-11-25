@@ -823,7 +823,7 @@
 }
 
 .search-style-2 {
-	width: 100%;	
+	width: 100%;
 	form {
 		width: 100%;
 		display: -webkit-box;
@@ -861,7 +861,7 @@
 
 		input {		
 			width: 100%;
-			max-width: 683px;
+			max-width: 883px;
 			font-size: 14px;
 			background-image: url(../imgs/theme/icons/search.png);
 			background-repeat: no-repeat;
@@ -1544,7 +1544,7 @@
 	}
 	p {
 		color: $color-brand;
-		font-size: 26px;
+		font-size: 18px;
 		font-weight: 700;		
 		font-family: $font-heading;
 		display: block;
@@ -1684,8 +1684,8 @@
 		border-radius: 4px;
 		max-width: 550px;
 		background-color: #fff;
-		input {	
-			max-width: 600px;
+		input {
+			max-width: 700px;
 			border-width: 0px;
 			border-radius: 0 5px 5px 0;
 			margin-left: 20px;

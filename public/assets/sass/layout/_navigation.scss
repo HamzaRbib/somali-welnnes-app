@@ -639,6 +639,24 @@
 
 }
 
+.more-categories{
+	display: flex;
+	margin-left: 30% !important;
+	margin-top:  8px !important;
+	align-items: center;
+	color: $color-brand;
+	cursor: pointer;
+	p{
+		color: $color-brand;
+		font-size: large !important;
+		font-weight: bold;
+	}
+}
+
+.add-icon{
+	font-size: larger !important;
+}
+
 .categori-dropdown-active-small {
 	z-index: 9;
 	margin: 0;

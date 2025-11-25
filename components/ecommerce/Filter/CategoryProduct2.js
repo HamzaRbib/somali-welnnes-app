@@ -32,50 +32,50 @@ const CategoryProduct2 = ({ updateProductCategory }) => {
                 <li onClick={(e) => selectCategory(e, "jeans")}>
                     <a>
                         <img
-                            src="/assets/imgs/theme/icons/category-1.svg"
+                            src="/assets/imgs/theme/icons/category-1.png"
                             alt="nest"
                         />
-                        Milks & Dairies
+                        SALIID
                     </a>
 
                 </li>
                 <li onClick={(e) => selectCategory(e, "shoe")}>
                     <a>
                         <img
-                            src="/assets/imgs/theme/icons/category-2.svg"
+                            src="/assets/imgs/theme/icons/category-2.png"
                             alt="nest"
                         />
-                        Clothing
+                        SOAP
                     </a>
 
                 </li>
                 <li onClick={(e) => selectCategory(e, "jacket")}>
                     <a>
                         <img
-                            src="/assets/imgs/theme/icons/category-3.svg"
+                            src="/assets/imgs/theme/icons/category-3.png"
                             alt="nest"
                         />
-                        Pet Foods{" "}
+                        FACE WACH
                     </a>
 
                 </li>
                 <li onClick={(e) => selectCategory(e, "trousers")}>
                     <a>
                         <img
-                            src="/assets/imgs/theme/icons/category-4.svg"
+                            src="/assets/imgs/theme/icons/category-4.png"
                             alt="nest"
                         />
-                        Baking material
+                        POWDER
                     </a>
 
                 </li>
                 <li onClick={(e) => selectCategory(e, "accessories")}>
                     <a>
                         <img
-                            src="/assets/imgs/theme/icons/category-5.svg"
+                            src="/assets/imgs/theme/icons/category-5.png"
                             alt="nest"
                         />
-                        Fresh Fruit
+                        NUTS
                     </a>
                 </li>
             </ul>
