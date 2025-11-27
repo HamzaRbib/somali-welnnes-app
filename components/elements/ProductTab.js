@@ -16,11 +16,11 @@ const ProductTab = () => {
                             Description
                         </a>
                     </li>
-                    <li className="nav-item">
+                    {/* <li className="nav-item">
                         <a className={activeIndex === 2 ? "nav-link active" : "nav-link"} id="Additional-info-tab" data-bs-toggle="tab" onClick={() => handleOnClick(2)}>
                             Additional info
                         </a>
-                    </li>
+                    </li> */}
 
                     <li className="nav-item">
                         <a className={activeIndex === 3 ? "nav-link active" : "nav-link"} id="Reviews-tab" data-bs-toggle="tab" onClick={() => handleOnClick(3)}>
@@ -58,7 +58,7 @@ const ProductTab = () => {
                             <p>Scallop or far crud plain remarkably far by thus far iguana lewd precociously and and less rattlesnake contrary caustic wow this near alas and next and pled the yikes articulate about as less cackled dalmatian in much less well jeering for the thanks blindly sentimental whimpered less across objectively fanciful grimaced wildly some wow and rose jeepers outgrew lugubrious luridly irrationally attractively dachshund.</p>
                         </div>
                     </div>
-                    <div className={activeIndex === 2 ? "tab-pane fade show active" : "tab-pane fade"} id="Additional-info">
+                    {/* <div className={activeIndex === 2 ? "tab-pane fade show active" : "tab-pane fade"} id="Additional-info">
                         <table className="font-md">
                             <tbody>
                                 <tr className="stand-up">
@@ -147,7 +147,7 @@ const ProductTab = () => {
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                    </div> */}
                     <div className={activeIndex === 3 ? "tab-pane fade show active" : "tab-pane fade"} id="Reviews">
                         <div className="comments-area">
                             <div className="row">

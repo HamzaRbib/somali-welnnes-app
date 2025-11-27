@@ -12,13 +12,11 @@ const Footer = () => {
                 <div className="position-relative newsletter-inner">
                   <div className="newsletter-content">
                     <h2 className="mb-20">
-                      Nourish Your Skin Daily with Our <br /> Natural Care
+                      Nourish Your Skin Daily with Our Natural Care
                       Essentials
                     </h2>
-                    <p className="mb-45 fw-bolder">
-                      Discover creams, shampoos, and wellness products made to{" "}
-                      <br />
-                      pamper your body.
+                    <p className="mb-45 fw-bolder" style={{maxWidth: "50%"}}>
+                      Discover creams, shampoos, and wellness products made to pamper your body.
                     </p>
                   </div>
                   <img

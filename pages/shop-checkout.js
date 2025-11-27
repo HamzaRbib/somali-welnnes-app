@@ -6,2048 +6,367 @@ import {
     decreaseQuantity,
     deleteFromCart,
     increaseQuantity,
-    openCart
-} from "../redux/action/cart";
-
-const Cart = ({
     openCart,
+} from "../redux/action/cart";
+import React, { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+
+const Checkout = ({
     cartItems,
-    activeCart,
-    closeCart,
     increaseQuantity,
     decreaseQuantity,
     deleteFromCart,
     clearCart,
 }) => {
+    const [paymentMethod, setPaymentMethod] = useState("edahab");
+    const [branch, setBranch] = useState("downtown");
+    const router = useRouter();
+
     const price = () => {
         let price = 0;
         cartItems.forEach((item) => (price += item.price * item.quantity));
-
         return price;
     };
 
+    const calculateCartTotals = () => {
+        let grossTotal = 0;
+        let discountAmount = 0;
+
+        cartItems.forEach((item) => {
+            const itemPrice = parseFloat(item.price);
+            const itemOldPrice = item.oldPrice ? parseFloat(item.oldPrice) : itemPrice;
+            const quantity = item.quantity;
+
+            grossTotal += itemOldPrice * quantity;
+            discountAmount += (itemOldPrice - itemPrice) * quantity;
+        });
+
+        return { grossTotal, discountAmount };
+    };
+
+    const { grossTotal, discountAmount } = calculateCartTotals();
+    const subtotal = price();
+    const shipping = 5.0; // Fixed shipping as per image example (approx)
+    const total = subtotal + shipping;
+
     return (
-        <>
-            <Layout parent="Home" sub="Shop" subChild="Checkout">
-                <section className="mt-50 mb-50">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-lg-8 mb-40">
-                                <h1 className="heading-2 mb-10">Checkout</h1>
-                                <div className="d-flex justify-content-between">
-                                    <h6 className="text-body">
-                                        Carefully check the information before checkout
-                                    </h6>
+        <Layout parent="Home" sub="Shop" subChild="Checkout">
+            <section className="mt-50 mb-50">
+                <div className="container">
+                    <div className="row">
+                        {/* Left Column */}
+                        <div className="col-lg-8">
+
+                            {/* Delivery Address Section */}
+                            <div className="mb-4">
+                                <h4 className="mb-3">Delivery Address *</h4>
+                                <div
+                                    className="p-3 d-flex justify-content-between align-items-center"
+                                    style={{
+                                        backgroundColor: "#f7f8f9",
+                                        borderRadius: "10px",
+                                        border: "1px solid #ececec",
+                                    }}
+                                >
+                                    <div className="d-flex align-items-center gap-2">
+                                        <div className="mr-3">
+                                            <img src="assets/imgs/theme/icons/location-user.svg" />
+                                        </div>
+                                        <div>
+                                            <span className="d-block text-muted font-xs">Company</span>
+                                            <span className="fw-bold text-heading">Mogadishu, Somalia Street</span>
+                                        </div>
+                                    </div>
+                                    <button
+                                        className="btn btn-sm btn-outline"
+                                        style={{
+                                            borderColor: "#ececec",
+                                            color: "#84a606",
+                                            backgroundColor: "white",
+                                            borderRadius: "5px",
+                                            padding: "5px 15px",
+                                        }}
+                                    >
+                                        Change
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Grocery Branches Section */}
+                            <div className="mb-4">
+                                <h6 className="mb-2">Grocery Branches *</h6>
+                                <select
+                                    className="form-select"
+                                    value={branch}
+                                    onChange={(e) => setBranch(e.target.value)}
+                                    style={{
+                                        height: "50px",
+                                        backgroundColor: "#fff",
+                                        borderRadius: "10px",
+                                        border: "1px solid #ececec",
+                                    }}
+                                >
+                                    <option value="downtown">SOMALI WELLNESS - Downtown Branch</option>
+                                    <option value="uptown">SOMALI WELLNESS - Uptown Branch</option>
+                                </select>
+                            </div>
+
+                            {/* Order List Section */}
+                            <div className="mb-4">
+                                <h4 className="mb-3">Order List</h4>
+
+                                {/* Header */}
+                                <div
+                                    className="row align-items-center p-4 mb-2 d-none d-md-flex"
+                                    style={{
+                                        backgroundColor: "#84a606",
+                                        color: "white",
+                                        borderRadius: "15px",
+                                    }}
+                                >
+                                    <div className="col-md-5 pl-30">Product</div>
+                                    <div className="col-md-2 text-center">Price</div>
+                                    <div className="col-md-3 text-center">Quantity</div>
+                                    <div className="col-md-2 text-center">Subtotal</div>
+                                </div>
+
+                                {/* Items */}
+                                <div className="cart-items p-3" style={{ borderRadius: "15px", borderTop: "none" }}>
+                                    {cartItems.length <= 0 && (
+                                        <div className="text-center p-5">No Products in Cart</div>
+                                    )}
+                                    {cartItems.map((item, i) => (
+                                        <div
+                                            key={i}
+                                            className="row align-items-center py-3 border-bottom"
+                                        >
+                                            {/* Product */}
+                                            <div className="col-12 col-md-5 d-flex align-items-center mb-3 mb-md-0">
+                                                <div
+                                                    className="remove-icon px-2 mr-2"
+                                                    style={{ cursor: "pointer" }}
+                                                    onClick={() => deleteFromCart(item.id)}
+                                                >
+                                                    <i className="fi-rs-cross" style={{ fontSize: "14px" }}></i>
+                                                </div>
+                                                <div
+                                                    className="image-container mr-15"
+                                                    style={{ width: "60px", height: "60px", flexShrink: 0 }}
+                                                >
+                                                    <img
+                                                        src={item.images[0].img}
+                                                        alt={item.title}
+                                                        style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                                                    />
+                                                </div>
+                                                <h6 className="mb-0">
+                                                    <Link href="/products">{item.title}</Link>
+                                                </h6>
+                                            </div>
+
+                                            {/* Price */}
+                                            <div className="col-4 col-md-2 text-center">
+                                                <div className="d-md-none text-muted font-small mb-1">Price</div>
+                                                <h5 className="text-body">${item.price}</h5>
+                                            </div>
+
+                                            {/* Quantity */}
+                                            <div className="col-4 col-md-3 text-center">
+                                                <div className="d-md-none text-muted font-small mb-1">Qty</div>
+                                                <div className="d-flex align-items-center justify-content-center">
+                                                    <button
+                                                        onClick={() => decreaseQuantity(item.id)}
+                                                        style={{
+                                                            backgroundColor: "#f1f1f1",
+                                                            border: "none",
+                                                            width: "25px",
+                                                            height: "25px",
+                                                            borderRadius: "4px",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                            cursor: "pointer",
+                                                        }}
+                                                    >
+                                                        <i className="fi-rs-minus-small"></i>
+                                                    </button>
+                                                    <span className="mx-2 fw-bold">{item.quantity}</span>
+                                                    <button
+                                                        onClick={() => increaseQuantity(item.id)}
+                                                        style={{
+                                                            backgroundColor: "#84a606",
+                                                            color: "white",
+                                                            border: "none",
+                                                            width: "25px",
+                                                            height: "25px",
+                                                            borderRadius: "4px",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                            cursor: "pointer",
+                                                        }}
+                                                    >
+                                                        <i className="fi-rs-plus-small"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            {/* Subtotal */}
+                                            <div className="col-4 col-md-2 text-center">
+                                                <div className="d-md-none text-muted font-small mb-1">Total</div>
+                                                <h5 className="text-brand">
+                                                    ${(item.quantity * item.price).toFixed(2)}
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
-                        <div className="row">
-                            <div className="col-lg-7">
-                                <div className="row mb-50">
-                                    <div className="col-lg-6 mb-sm-15 mb-lg-0 mb-md-3">
-                                        <div className="toggle_info">
-                                            <span>
-                                                <i className="fi-rs-user mr-10"></i>
-                                                <span className="text-muted font-lg">
-                                                    Already have an account?
-                                                </span>{" "}
-                                                <a
-                                                    href="#loginform"
-                                                    data-bs-toggle="collapse"
-                                                    className="collapsed font-lg"
-                                                    aria-expanded="false"
-                                                >
-                                                    Click here to login
-                                                </a>
-                                            </span>
-                                        </div>
-                                        <div
-                                            className="panel-collapse collapse login_form"
-                                            id="loginform"
-                                        >
-                                            <div className="panel-body">
-                                                <p className="mb-30 font-sm">
-                                                    If you have shopped with us
-                                                    before, please enter your
-                                                    details below. If you are a
-                                                    new customer, please proceed
-                                                    to the Billing &amp;
-                                                    Shipping section.
-                                                </p>
-                                                <form method="post">
-                                                    <div className="form-group">
-                                                        <input
-                                                            type="text"
-                                                            name="email"
-                                                            placeholder="Username Or Email"
-                                                        />
-                                                    </div>
-                                                    <div className="form-group">
-                                                        <input
-                                                            type="password"
-                                                            name="password"
-                                                            placeholder="Password"
-                                                        />
-                                                    </div>
-                                                    <div className="login_footer form-group">
-                                                        <div className="chek-form">
-                                                            <div className="custome-checkbox">
-                                                                <input
-                                                                    className="form-check-input"
-                                                                    type="checkbox"
-                                                                    name="checkbox"
-                                                                    id="remember"
-                                                                    value=""
-                                                                />
-                                                                <label
-                                                                    className="form-check-label"
-                                                                    htmlFor="remember"
-                                                                >
-                                                                    <span>
-                                                                        Remember
-                                                                        me
-                                                                    </span>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <a href="#">
-                                                            Forgot password?
-                                                        </a>
-                                                    </div>
-                                                    <div className="form-group">
-                                                        <button
-                                                            className="btn btn-md"
-                                                            name="login"
-                                                        >
-                                                            Log in
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-lg-6">
-                                        <form
-                                            method="post"
-                                            className="apply-coupon"
-                                        >
-                                            <input
-                                                type="text"
-                                                placeholder="Enter Coupon Code..."
-                                            />
-                                            <button
-                                                className="btn  btn-md"
-                                                name="login"
-                                            >
-                                                Apply Coupon
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                                <div className="mb-25">
-                                    <h4>Billing Details</h4>
-                                </div>
-                                <form method="post">
-                                    <div className="form-group">
-                                        <input
-                                            type="text"
-                                            required=""
-                                            name="fname"
-                                            placeholder="First name *"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <input
-                                            type="text"
-                                            required=""
-                                            name="lname"
-                                            placeholder="Last name *"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <input
-                                            required=""
-                                            type="text"
-                                            name="cname"
-                                            placeholder="Company Name"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="custom_select">
-                                            <select className="form-control select-active">
-                                                <option value="">
-                                                    Select an option...
-                                                </option>
-                                                <option value="AX">
-                                                    Aland Islands
-                                                </option>
-                                                <option value="AF">
-                                                    Afghanistan
-                                                </option>
-                                                <option value="AL">
-                                                    Albania
-                                                </option>
-                                                <option value="DZ">
-                                                    Algeria
-                                                </option>
-                                                <option value="AD">
-                                                    Andorra
-                                                </option>
-                                                <option value="AO">
-                                                    Angola
-                                                </option>
-                                                <option value="AI">
-                                                    Anguilla
-                                                </option>
-                                                <option value="AQ">
-                                                    Antarctica
-                                                </option>
-                                                <option value="AG">
-                                                    Antigua and Barbuda
-                                                </option>
-                                                <option value="AR">
-                                                    Argentina
-                                                </option>
-                                                <option value="AM">
-                                                    Armenia
-                                                </option>
-                                                <option value="AW">
-                                                    Aruba
-                                                </option>
-                                                <option value="AU">
-                                                    Australia
-                                                </option>
-                                                <option value="AT">
-                                                    Austria
-                                                </option>
-                                                <option value="AZ">
-                                                    Azerbaijan
-                                                </option>
-                                                <option value="BS">
-                                                    Bahamas
-                                                </option>
-                                                <option value="BH">
-                                                    Bahrain
-                                                </option>
-                                                <option value="BD">
-                                                    Bangladesh
-                                                </option>
-                                                <option value="BB">
-                                                    Barbados
-                                                </option>
-                                                <option value="BY">
-                                                    Belarus
-                                                </option>
-                                                <option value="PW">
-                                                    Belau
-                                                </option>
-                                                <option value="BE">
-                                                    Belgium
-                                                </option>
-                                                <option value="BZ">
-                                                    Belize
-                                                </option>
-                                                <option value="BJ">
-                                                    Benin
-                                                </option>
-                                                <option value="BM">
-                                                    Bermuda
-                                                </option>
-                                                <option value="BT">
-                                                    Bhutan
-                                                </option>
-                                                <option value="BO">
-                                                    Bolivia
-                                                </option>
-                                                <option value="BQ">
-                                                    Bonaire, Saint Eustatius and
-                                                    Saba
-                                                </option>
-                                                <option value="BA">
-                                                    Bosnia and Herzegovina
-                                                </option>
-                                                <option value="BW">
-                                                    Botswana
-                                                </option>
-                                                <option value="BV">
-                                                    Bouvet Island
-                                                </option>
-                                                <option value="BR">
-                                                    Brazil
-                                                </option>
-                                                <option value="IO">
-                                                    British Indian Ocean
-                                                    Territory
-                                                </option>
-                                                <option value="VG">
-                                                    British Virgin Islands
-                                                </option>
-                                                <option value="BN">
-                                                    Brunei
-                                                </option>
-                                                <option value="BG">
-                                                    Bulgaria
-                                                </option>
-                                                <option value="BF">
-                                                    Burkina Faso
-                                                </option>
-                                                <option value="BI">
-                                                    Burundi
-                                                </option>
-                                                <option value="KH">
-                                                    Cambodia
-                                                </option>
-                                                <option value="CM">
-                                                    Cameroon
-                                                </option>
-                                                <option value="CA">
-                                                    Canada
-                                                </option>
-                                                <option value="CV">
-                                                    Cape Verde
-                                                </option>
-                                                <option value="KY">
-                                                    Cayman Islands
-                                                </option>
-                                                <option value="CF">
-                                                    Central African Republic
-                                                </option>
-                                                <option value="TD">Chad</option>
-                                                <option value="CL">
-                                                    Chile
-                                                </option>
-                                                <option value="CN">
-                                                    China
-                                                </option>
-                                                <option value="CX">
-                                                    Christmas Island
-                                                </option>
-                                                <option value="CC">
-                                                    Cocos (Keeling) Islands
-                                                </option>
-                                                <option value="CO">
-                                                    Colombia
-                                                </option>
-                                                <option value="KM">
-                                                    Comoros
-                                                </option>
-                                                <option value="CG">
-                                                    Congo (Brazzaville)
-                                                </option>
-                                                <option value="CD">
-                                                    Congo (Kinshasa)
-                                                </option>
-                                                <option value="CK">
-                                                    Cook Islands
-                                                </option>
-                                                <option value="CR">
-                                                    Costa Rica
-                                                </option>
-                                                <option value="HR">
-                                                    Croatia
-                                                </option>
-                                                <option value="CU">Cuba</option>
-                                                <option value="CW">
-                                                    CuraÇao
-                                                </option>
-                                                <option value="CY">
-                                                    Cyprus
-                                                </option>
-                                                <option value="CZ">
-                                                    Czech Republic
-                                                </option>
-                                                <option value="DK">
-                                                    Denmark
-                                                </option>
-                                                <option value="DJ">
-                                                    Djibouti
-                                                </option>
-                                                <option value="DM">
-                                                    Dominica
-                                                </option>
-                                                <option value="DO">
-                                                    Dominican Republic
-                                                </option>
-                                                <option value="EC">
-                                                    Ecuador
-                                                </option>
-                                                <option value="EG">
-                                                    Egypt
-                                                </option>
-                                                <option value="SV">
-                                                    El Salvador
-                                                </option>
-                                                <option value="GQ">
-                                                    Equatorial Guinea
-                                                </option>
-                                                <option value="ER">
-                                                    Eritrea
-                                                </option>
-                                                <option value="EE">
-                                                    Estonia
-                                                </option>
-                                                <option value="ET">
-                                                    Ethiopia
-                                                </option>
-                                                <option value="FK">
-                                                    Falkland Islands
-                                                </option>
-                                                <option value="FO">
-                                                    Faroe Islands
-                                                </option>
-                                                <option value="FJ">Fiji</option>
-                                                <option value="FI">
-                                                    Finland
-                                                </option>
-                                                <option value="FR">
-                                                    France
-                                                </option>
-                                                <option value="GF">
-                                                    French Guiana
-                                                </option>
-                                                <option value="PF">
-                                                    French Polynesia
-                                                </option>
-                                                <option value="TF">
-                                                    French Southern Territories
-                                                </option>
-                                                <option value="GA">
-                                                    Gabon
-                                                </option>
-                                                <option value="GM">
-                                                    Gambia
-                                                </option>
-                                                <option value="GE">
-                                                    Georgia
-                                                </option>
-                                                <option value="DE">
-                                                    Germany
-                                                </option>
-                                                <option value="GH">
-                                                    Ghana
-                                                </option>
-                                                <option value="GI">
-                                                    Gibraltar
-                                                </option>
-                                                <option value="GR">
-                                                    Greece
-                                                </option>
-                                                <option value="GL">
-                                                    Greenland
-                                                </option>
-                                                <option value="GD">
-                                                    Grenada
-                                                </option>
-                                                <option value="GP">
-                                                    Guadeloupe
-                                                </option>
-                                                <option value="GT">
-                                                    Guatemala
-                                                </option>
-                                                <option value="GG">
-                                                    Guernsey
-                                                </option>
-                                                <option value="GN">
-                                                    Guinea
-                                                </option>
-                                                <option value="GW">
-                                                    Guinea-Bissau
-                                                </option>
-                                                <option value="GY">
-                                                    Guyana
-                                                </option>
-                                                <option value="HT">
-                                                    Haiti
-                                                </option>
-                                                <option value="HM">
-                                                    Heard Island and McDonald
-                                                    Islands
-                                                </option>
-                                                <option value="HN">
-                                                    Honduras
-                                                </option>
-                                                <option value="HK">
-                                                    Hong Kong
-                                                </option>
-                                                <option value="HU">
-                                                    Hungary
-                                                </option>
-                                                <option value="IS">
-                                                    Iceland
-                                                </option>
-                                                <option value="IN">
-                                                    India
-                                                </option>
-                                                <option value="ID">
-                                                    Indonesia
-                                                </option>
-                                                <option value="IR">Iran</option>
-                                                <option value="IQ">Iraq</option>
-                                                <option value="IM">
-                                                    Isle of Man
-                                                </option>
-                                                <option value="IL">
-                                                    Israel
-                                                </option>
-                                                <option value="IT">
-                                                    Italy
-                                                </option>
-                                                <option value="CI">
-                                                    Ivory Coast
-                                                </option>
-                                                <option value="JM">
-                                                    Jamaica
-                                                </option>
-                                                <option value="JP">
-                                                    Japan
-                                                </option>
-                                                <option value="JE">
-                                                    Jersey
-                                                </option>
-                                                <option value="JO">
-                                                    Jordan
-                                                </option>
-                                                <option value="KZ">
-                                                    Kazakhstan
-                                                </option>
-                                                <option value="KE">
-                                                    Kenya
-                                                </option>
-                                                <option value="KI">
-                                                    Kiribati
-                                                </option>
-                                                <option value="KW">
-                                                    Kuwait
-                                                </option>
-                                                <option value="KG">
-                                                    Kyrgyzstan
-                                                </option>
-                                                <option value="LA">Laos</option>
-                                                <option value="LV">
-                                                    Latvia
-                                                </option>
-                                                <option value="LB">
-                                                    Lebanon
-                                                </option>
-                                                <option value="LS">
-                                                    Lesotho
-                                                </option>
-                                                <option value="LR">
-                                                    Liberia
-                                                </option>
-                                                <option value="LY">
-                                                    Libya
-                                                </option>
-                                                <option value="LI">
-                                                    Liechtenstein
-                                                </option>
-                                                <option value="LT">
-                                                    Lithuania
-                                                </option>
-                                                <option value="LU">
-                                                    Luxembourg
-                                                </option>
-                                                <option value="MO">
-                                                    Macao S.A.R., China
-                                                </option>
-                                                <option value="MK">
-                                                    Macedonia
-                                                </option>
-                                                <option value="MG">
-                                                    Madagascar
-                                                </option>
-                                                <option value="MW">
-                                                    Malawi
-                                                </option>
-                                                <option value="MY">
-                                                    Malaysia
-                                                </option>
-                                                <option value="MV">
-                                                    Maldives
-                                                </option>
-                                                <option value="ML">Mali</option>
-                                                <option value="MT">
-                                                    Malta
-                                                </option>
-                                                <option value="MH">
-                                                    Marshall Islands
-                                                </option>
-                                                <option value="MQ">
-                                                    Martinique
-                                                </option>
-                                                <option value="MR">
-                                                    Mauritania
-                                                </option>
-                                                <option value="MU">
-                                                    Mauritius
-                                                </option>
-                                                <option value="YT">
-                                                    Mayotte
-                                                </option>
-                                                <option value="MX">
-                                                    Mexico
-                                                </option>
-                                                <option value="FM">
-                                                    Micronesia
-                                                </option>
-                                                <option value="MD">
-                                                    Moldova
-                                                </option>
-                                                <option value="MC">
-                                                    Monaco
-                                                </option>
-                                                <option value="MN">
-                                                    Mongolia
-                                                </option>
-                                                <option value="ME">
-                                                    Montenegro
-                                                </option>
-                                                <option value="MS">
-                                                    Montserrat
-                                                </option>
-                                                <option value="MA">
-                                                    Morocco
-                                                </option>
-                                                <option value="MZ">
-                                                    Mozambique
-                                                </option>
-                                                <option value="MM">
-                                                    Myanmar
-                                                </option>
-                                                <option value="NA">
-                                                    Namibia
-                                                </option>
-                                                <option value="NR">
-                                                    Nauru
-                                                </option>
-                                                <option value="NP">
-                                                    Nepal
-                                                </option>
-                                                <option value="NL">
-                                                    Netherlands
-                                                </option>
-                                                <option value="AN">
-                                                    Netherlands Antilles
-                                                </option>
-                                                <option value="NC">
-                                                    New Caledonia
-                                                </option>
-                                                <option value="NZ">
-                                                    New Zealand
-                                                </option>
-                                                <option value="NI">
-                                                    Nicaragua
-                                                </option>
-                                                <option value="NE">
-                                                    Niger
-                                                </option>
-                                                <option value="NG">
-                                                    Nigeria
-                                                </option>
-                                                <option value="NU">Niue</option>
-                                                <option value="NF">
-                                                    Norfolk Island
-                                                </option>
-                                                <option value="KP">
-                                                    North Korea
-                                                </option>
-                                                <option value="NO">
-                                                    Norway
-                                                </option>
-                                                <option value="OM">Oman</option>
-                                                <option value="PK">
-                                                    Pakistan
-                                                </option>
-                                                <option value="PS">
-                                                    Palestinian Territory
-                                                </option>
-                                                <option value="PA">
-                                                    Panama
-                                                </option>
-                                                <option value="PG">
-                                                    Papua New Guinea
-                                                </option>
-                                                <option value="PY">
-                                                    Paraguay
-                                                </option>
-                                                <option value="PE">Peru</option>
-                                                <option value="PH">
-                                                    Philippines
-                                                </option>
-                                                <option value="PN">
-                                                    Pitcairn
-                                                </option>
-                                                <option value="PL">
-                                                    Poland
-                                                </option>
-                                                <option value="PT">
-                                                    Portugal
-                                                </option>
-                                                <option value="QA">
-                                                    Qatar
-                                                </option>
-                                                <option value="IE">
-                                                    Republic of Ireland
-                                                </option>
-                                                <option value="RE">
-                                                    Reunion
-                                                </option>
-                                                <option value="RO">
-                                                    Romania
-                                                </option>
-                                                <option value="RU">
-                                                    Russia
-                                                </option>
-                                                <option value="RW">
-                                                    Rwanda
-                                                </option>
-                                                <option value="ST">
-                                                    São Tomé and Príncipe
-                                                </option>
-                                                <option value="BL">
-                                                    Saint Barthélemy
-                                                </option>
-                                                <option value="SH">
-                                                    Saint Helena
-                                                </option>
-                                                <option value="KN">
-                                                    Saint Kitts and Nevis
-                                                </option>
-                                                <option value="LC">
-                                                    Saint Lucia
-                                                </option>
-                                                <option value="SX">
-                                                    Saint Martin (Dutch part)
-                                                </option>
-                                                <option value="MF">
-                                                    Saint Martin (French part)
-                                                </option>
-                                                <option value="PM">
-                                                    Saint Pierre and Miquelon
-                                                </option>
-                                                <option value="VC">
-                                                    Saint Vincent and the
-                                                    Grenadines
-                                                </option>
-                                                <option value="SM">
-                                                    San Marino
-                                                </option>
-                                                <option value="SA">
-                                                    Saudi Arabia
-                                                </option>
-                                                <option value="SN">
-                                                    Senegal
-                                                </option>
-                                                <option value="RS">
-                                                    Serbia
-                                                </option>
-                                                <option value="SC">
-                                                    Seychelles
-                                                </option>
-                                                <option value="SL">
-                                                    Sierra Leone
-                                                </option>
-                                                <option value="SG">
-                                                    Singapore
-                                                </option>
-                                                <option value="SK">
-                                                    Slovakia
-                                                </option>
-                                                <option value="SI">
-                                                    Slovenia
-                                                </option>
-                                                <option value="SB">
-                                                    Solomon Islands
-                                                </option>
-                                                <option value="SO">
-                                                    Somalia
-                                                </option>
-                                                <option value="ZA">
-                                                    South Africa
-                                                </option>
-                                                <option value="GS">
-                                                    South Georgia/Sandwich
-                                                    Islands
-                                                </option>
-                                                <option value="KR">
-                                                    South Korea
-                                                </option>
-                                                <option value="SS">
-                                                    South Sudan
-                                                </option>
-                                                <option value="ES">
-                                                    Spain
-                                                </option>
-                                                <option value="LK">
-                                                    Sri Lanka
-                                                </option>
-                                                <option value="SD">
-                                                    Sudan
-                                                </option>
-                                                <option value="SR">
-                                                    Suriname
-                                                </option>
-                                                <option value="SJ">
-                                                    Svalbard and Jan Mayen
-                                                </option>
-                                                <option value="SZ">
-                                                    Swaziland
-                                                </option>
-                                                <option value="SE">
-                                                    Sweden
-                                                </option>
-                                                <option value="CH">
-                                                    Switzerland
-                                                </option>
-                                                <option value="SY">
-                                                    Syria
-                                                </option>
-                                                <option value="TW">
-                                                    Taiwan
-                                                </option>
-                                                <option value="TJ">
-                                                    Tajikistan
-                                                </option>
-                                                <option value="TZ">
-                                                    Tanzania
-                                                </option>
-                                                <option value="TH">
-                                                    Thailand
-                                                </option>
-                                                <option value="TL">
-                                                    Timor-Leste
-                                                </option>
-                                                <option value="TG">Togo</option>
-                                                <option value="TK">
-                                                    Tokelau
-                                                </option>
-                                                <option value="TO">
-                                                    Tonga
-                                                </option>
-                                                <option value="TT">
-                                                    Trinidad and Tobago
-                                                </option>
-                                                <option value="TN">
-                                                    Tunisia
-                                                </option>
-                                                <option value="TR">
-                                                    Turkey
-                                                </option>
-                                                <option value="TM">
-                                                    Turkmenistan
-                                                </option>
-                                                <option value="TC">
-                                                    Turks and Caicos Islands
-                                                </option>
-                                                <option value="TV">
-                                                    Tuvalu
-                                                </option>
-                                                <option value="UG">
-                                                    Uganda
-                                                </option>
-                                                <option value="UA">
-                                                    Ukraine
-                                                </option>
-                                                <option value="AE">
-                                                    United Arab Emirates
-                                                </option>
-                                                <option value="GB">
-                                                    United Kingdom (UK)
-                                                </option>
-                                                <option value="US">
-                                                    USA (US)
-                                                </option>
-                                                <option value="UY">
-                                                    Uruguay
-                                                </option>
-                                                <option value="UZ">
-                                                    Uzbekistan
-                                                </option>
-                                                <option value="VU">
-                                                    Vanuatu
-                                                </option>
-                                                <option value="VA">
-                                                    Vatican
-                                                </option>
-                                                <option value="VE">
-                                                    Venezuela
-                                                </option>
-                                                <option value="VN">
-                                                    Vietnam
-                                                </option>
-                                                <option value="WF">
-                                                    Wallis and Futuna
-                                                </option>
-                                                <option value="EH">
-                                                    Western Sahara
-                                                </option>
-                                                <option value="WS">
-                                                    Western Samoa
-                                                </option>
-                                                <option value="YE">
-                                                    Yemen
-                                                </option>
-                                                <option value="ZM">
-                                                    Zambia
-                                                </option>
-                                                <option value="ZW">
-                                                    Zimbabwe
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <input
-                                            type="text"
-                                            name="billing_address"
-                                            required=""
-                                            placeholder="Address *"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <input
-                                            type="text"
-                                            name="billing_address2"
-                                            required=""
-                                            placeholder="Address line2"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <input
-                                            required=""
-                                            type="text"
-                                            name="city"
-                                            placeholder="City / Town *"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <input
-                                            required=""
-                                            type="text"
-                                            name="state"
-                                            placeholder="State / County *"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <input
-                                            required=""
-                                            type="text"
-                                            name="zipcode"
-                                            placeholder="Postcode / ZIP *"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <input
-                                            required=""
-                                            type="text"
-                                            name="phone"
-                                            placeholder="Phone *"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <input
-                                            required=""
-                                            type="text"
-                                            name="email"
-                                            placeholder="Email address *"
-                                        />
-                                    </div>
-                                    <div
-                                        id="collapsePassword"
-                                        className="form-group create-account collapse in"
-                                    >
-                                        <input
-                                            required=""
-                                            type="password"
-                                            placeholder="Password"
-                                            name="password"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="checkbox">
-                                            <div className="custome-checkbox">
-                                                <input
-                                                    className="form-check-input"
-                                                    type="checkbox"
-                                                    name="checkbox"
-                                                    id="createaccount"
-                                                />
-                                                <label
-                                                    className="form-check-label label_info"
-                                                    data-bs-toggle="collapse"
-                                                    href="#collapsePassword"
-                                                    data-target="#collapsePassword"
-                                                    aria-controls="collapsePassword"
-                                                    htmlFor="createaccount"
-                                                >
-                                                    <span>
-                                                        Create an account?
-                                                    </span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div className="ship_detail">
-                                        <div className="form-group">
-                                            <div className="chek-form">
-                                                <div className="custome-checkbox">
-                                                    <input
-                                                        className="form-check-input"
-                                                        type="checkbox"
-                                                        name="checkbox"
-                                                        id="differentaddress"
-                                                    />
-                                                    <label
-                                                        className="form-check-label label_info"
-                                                        data-bs-toggle="collapse"
-                                                        data-target="#collapseAddress"
-                                                        href="#collapseAddress"
-                                                        aria-controls="collapseAddress"
-                                                        htmlFor="differentaddress"
-                                                    >
-                                                        <span>
-                                                            Ship to a different
-                                                            address?
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div
-                                            id="collapseAddress"
-                                            className="different_address collapse in"
-                                        >
-                                            <div className="form-group">
-                                                <input
-                                                    type="text"
-                                                    required=""
-                                                    name="fname"
-                                                    placeholder="First name *"
-                                                />
-                                            </div>
-                                            <div className="form-group">
-                                                <input
-                                                    type="text"
-                                                    required=""
-                                                    name="lname"
-                                                    placeholder="Last name *"
-                                                />
-                                            </div>
-                                            <div className="form-group">
-                                                <input
-                                                    required=""
-                                                    type="text"
-                                                    name="cname"
-                                                    placeholder="Company Name"
-                                                />
-                                            </div>
-                                            <div className="form-group">
-                                                <div className="custom_select">
-                                                    <select className="form-control select-active">
-                                                        <option value="">
-                                                            Select an option...
-                                                        </option>
-                                                        <option value="AX">
-                                                            Aland Islands
-                                                        </option>
-                                                        <option value="AF">
-                                                            Afghanistan
-                                                        </option>
-                                                        <option value="AL">
-                                                            Albania
-                                                        </option>
-                                                        <option value="DZ">
-                                                            Algeria
-                                                        </option>
-                                                        <option value="AD">
-                                                            Andorra
-                                                        </option>
-                                                        <option value="AO">
-                                                            Angola
-                                                        </option>
-                                                        <option value="AI">
-                                                            Anguilla
-                                                        </option>
-                                                        <option value="AQ">
-                                                            Antarctica
-                                                        </option>
-                                                        <option value="AG">
-                                                            Antigua and Barbuda
-                                                        </option>
-                                                        <option value="AR">
-                                                            Argentina
-                                                        </option>
-                                                        <option value="AM">
-                                                            Armenia
-                                                        </option>
-                                                        <option value="AW">
-                                                            Aruba
-                                                        </option>
-                                                        <option value="AU">
-                                                            Australia
-                                                        </option>
-                                                        <option value="AT">
-                                                            Austria
-                                                        </option>
-                                                        <option value="AZ">
-                                                            Azerbaijan
-                                                        </option>
-                                                        <option value="BS">
-                                                            Bahamas
-                                                        </option>
-                                                        <option value="BH">
-                                                            Bahrain
-                                                        </option>
-                                                        <option value="BD">
-                                                            Bangladesh
-                                                        </option>
-                                                        <option value="BB">
-                                                            Barbados
-                                                        </option>
-                                                        <option value="BY">
-                                                            Belarus
-                                                        </option>
-                                                        <option value="PW">
-                                                            Belau
-                                                        </option>
-                                                        <option value="BE">
-                                                            Belgium
-                                                        </option>
-                                                        <option value="BZ">
-                                                            Belize
-                                                        </option>
-                                                        <option value="BJ">
-                                                            Benin
-                                                        </option>
-                                                        <option value="BM">
-                                                            Bermuda
-                                                        </option>
-                                                        <option value="BT">
-                                                            Bhutan
-                                                        </option>
-                                                        <option value="BO">
-                                                            Bolivia
-                                                        </option>
-                                                        <option value="BQ">
-                                                            Bonaire, Saint
-                                                            Eustatius and Saba
-                                                        </option>
-                                                        <option value="BA">
-                                                            Bosnia and
-                                                            Herzegovina
-                                                        </option>
-                                                        <option value="BW">
-                                                            Botswana
-                                                        </option>
-                                                        <option value="BV">
-                                                            Bouvet Island
-                                                        </option>
-                                                        <option value="BR">
-                                                            Brazil
-                                                        </option>
-                                                        <option value="IO">
-                                                            British Indian Ocean
-                                                            Territory
-                                                        </option>
-                                                        <option value="VG">
-                                                            British Virgin
-                                                            Islands
-                                                        </option>
-                                                        <option value="BN">
-                                                            Brunei
-                                                        </option>
-                                                        <option value="BG">
-                                                            Bulgaria
-                                                        </option>
-                                                        <option value="BF">
-                                                            Burkina Faso
-                                                        </option>
-                                                        <option value="BI">
-                                                            Burundi
-                                                        </option>
-                                                        <option value="KH">
-                                                            Cambodia
-                                                        </option>
-                                                        <option value="CM">
-                                                            Cameroon
-                                                        </option>
-                                                        <option value="CA">
-                                                            Canada
-                                                        </option>
-                                                        <option value="CV">
-                                                            Cape Verde
-                                                        </option>
-                                                        <option value="KY">
-                                                            Cayman Islands
-                                                        </option>
-                                                        <option value="CF">
-                                                            Central African
-                                                            Republic
-                                                        </option>
-                                                        <option value="TD">
-                                                            Chad
-                                                        </option>
-                                                        <option value="CL">
-                                                            Chile
-                                                        </option>
-                                                        <option value="CN">
-                                                            China
-                                                        </option>
-                                                        <option value="CX">
-                                                            Christmas Island
-                                                        </option>
-                                                        <option value="CC">
-                                                            Cocos (Keeling)
-                                                            Islands
-                                                        </option>
-                                                        <option value="CO">
-                                                            Colombia
-                                                        </option>
-                                                        <option value="KM">
-                                                            Comoros
-                                                        </option>
-                                                        <option value="CG">
-                                                            Congo (Brazzaville)
-                                                        </option>
-                                                        <option value="CD">
-                                                            Congo (Kinshasa)
-                                                        </option>
-                                                        <option value="CK">
-                                                            Cook Islands
-                                                        </option>
-                                                        <option value="CR">
-                                                            Costa Rica
-                                                        </option>
-                                                        <option value="HR">
-                                                            Croatia
-                                                        </option>
-                                                        <option value="CU">
-                                                            Cuba
-                                                        </option>
-                                                        <option value="CW">
-                                                            CuraÇao
-                                                        </option>
-                                                        <option value="CY">
-                                                            Cyprus
-                                                        </option>
-                                                        <option value="CZ">
-                                                            Czech Republic
-                                                        </option>
-                                                        <option value="DK">
-                                                            Denmark
-                                                        </option>
-                                                        <option value="DJ">
-                                                            Djibouti
-                                                        </option>
-                                                        <option value="DM">
-                                                            Dominica
-                                                        </option>
-                                                        <option value="DO">
-                                                            Dominican Republic
-                                                        </option>
-                                                        <option value="EC">
-                                                            Ecuador
-                                                        </option>
-                                                        <option value="EG">
-                                                            Egypt
-                                                        </option>
-                                                        <option value="SV">
-                                                            El Salvador
-                                                        </option>
-                                                        <option value="GQ">
-                                                            Equatorial Guinea
-                                                        </option>
-                                                        <option value="ER">
-                                                            Eritrea
-                                                        </option>
-                                                        <option value="EE">
-                                                            Estonia
-                                                        </option>
-                                                        <option value="ET">
-                                                            Ethiopia
-                                                        </option>
-                                                        <option value="FK">
-                                                            Falkland Islands
-                                                        </option>
-                                                        <option value="FO">
-                                                            Faroe Islands
-                                                        </option>
-                                                        <option value="FJ">
-                                                            Fiji
-                                                        </option>
-                                                        <option value="FI">
-                                                            Finland
-                                                        </option>
-                                                        <option value="FR">
-                                                            France
-                                                        </option>
-                                                        <option value="GF">
-                                                            French Guiana
-                                                        </option>
-                                                        <option value="PF">
-                                                            French Polynesia
-                                                        </option>
-                                                        <option value="TF">
-                                                            French Southern
-                                                            Territories
-                                                        </option>
-                                                        <option value="GA">
-                                                            Gabon
-                                                        </option>
-                                                        <option value="GM">
-                                                            Gambia
-                                                        </option>
-                                                        <option value="GE">
-                                                            Georgia
-                                                        </option>
-                                                        <option value="DE">
-                                                            Germany
-                                                        </option>
-                                                        <option value="GH">
-                                                            Ghana
-                                                        </option>
-                                                        <option value="GI">
-                                                            Gibraltar
-                                                        </option>
-                                                        <option value="GR">
-                                                            Greece
-                                                        </option>
-                                                        <option value="GL">
-                                                            Greenland
-                                                        </option>
-                                                        <option value="GD">
-                                                            Grenada
-                                                        </option>
-                                                        <option value="GP">
-                                                            Guadeloupe
-                                                        </option>
-                                                        <option value="GT">
-                                                            Guatemala
-                                                        </option>
-                                                        <option value="GG">
-                                                            Guernsey
-                                                        </option>
-                                                        <option value="GN">
-                                                            Guinea
-                                                        </option>
-                                                        <option value="GW">
-                                                            Guinea-Bissau
-                                                        </option>
-                                                        <option value="GY">
-                                                            Guyana
-                                                        </option>
-                                                        <option value="HT">
-                                                            Haiti
-                                                        </option>
-                                                        <option value="HM">
-                                                            Heard Island and
-                                                            McDonald Islands
-                                                        </option>
-                                                        <option value="HN">
-                                                            Honduras
-                                                        </option>
-                                                        <option value="HK">
-                                                            Hong Kong
-                                                        </option>
-                                                        <option value="HU">
-                                                            Hungary
-                                                        </option>
-                                                        <option value="IS">
-                                                            Iceland
-                                                        </option>
-                                                        <option value="IN">
-                                                            India
-                                                        </option>
-                                                        <option value="ID">
-                                                            Indonesia
-                                                        </option>
-                                                        <option value="IR">
-                                                            Iran
-                                                        </option>
-                                                        <option value="IQ">
-                                                            Iraq
-                                                        </option>
-                                                        <option value="IM">
-                                                            Isle of Man
-                                                        </option>
-                                                        <option value="IL">
-                                                            Israel
-                                                        </option>
-                                                        <option value="IT">
-                                                            Italy
-                                                        </option>
-                                                        <option value="CI">
-                                                            Ivory Coast
-                                                        </option>
-                                                        <option value="JM">
-                                                            Jamaica
-                                                        </option>
-                                                        <option value="JP">
-                                                            Japan
-                                                        </option>
-                                                        <option value="JE">
-                                                            Jersey
-                                                        </option>
-                                                        <option value="JO">
-                                                            Jordan
-                                                        </option>
-                                                        <option value="KZ">
-                                                            Kazakhstan
-                                                        </option>
-                                                        <option value="KE">
-                                                            Kenya
-                                                        </option>
-                                                        <option value="KI">
-                                                            Kiribati
-                                                        </option>
-                                                        <option value="KW">
-                                                            Kuwait
-                                                        </option>
-                                                        <option value="KG">
-                                                            Kyrgyzstan
-                                                        </option>
-                                                        <option value="LA">
-                                                            Laos
-                                                        </option>
-                                                        <option value="LV">
-                                                            Latvia
-                                                        </option>
-                                                        <option value="LB">
-                                                            Lebanon
-                                                        </option>
-                                                        <option value="LS">
-                                                            Lesotho
-                                                        </option>
-                                                        <option value="LR">
-                                                            Liberia
-                                                        </option>
-                                                        <option value="LY">
-                                                            Libya
-                                                        </option>
-                                                        <option value="LI">
-                                                            Liechtenstein
-                                                        </option>
-                                                        <option value="LT">
-                                                            Lithuania
-                                                        </option>
-                                                        <option value="LU">
-                                                            Luxembourg
-                                                        </option>
-                                                        <option value="MO">
-                                                            Macao S.A.R., China
-                                                        </option>
-                                                        <option value="MK">
-                                                            Macedonia
-                                                        </option>
-                                                        <option value="MG">
-                                                            Madagascar
-                                                        </option>
-                                                        <option value="MW">
-                                                            Malawi
-                                                        </option>
-                                                        <option value="MY">
-                                                            Malaysia
-                                                        </option>
-                                                        <option value="MV">
-                                                            Maldives
-                                                        </option>
-                                                        <option value="ML">
-                                                            Mali
-                                                        </option>
-                                                        <option value="MT">
-                                                            Malta
-                                                        </option>
-                                                        <option value="MH">
-                                                            Marshall Islands
-                                                        </option>
-                                                        <option value="MQ">
-                                                            Martinique
-                                                        </option>
-                                                        <option value="MR">
-                                                            Mauritania
-                                                        </option>
-                                                        <option value="MU">
-                                                            Mauritius
-                                                        </option>
-                                                        <option value="YT">
-                                                            Mayotte
-                                                        </option>
-                                                        <option value="MX">
-                                                            Mexico
-                                                        </option>
-                                                        <option value="FM">
-                                                            Micronesia
-                                                        </option>
-                                                        <option value="MD">
-                                                            Moldova
-                                                        </option>
-                                                        <option value="MC">
-                                                            Monaco
-                                                        </option>
-                                                        <option value="MN">
-                                                            Mongolia
-                                                        </option>
-                                                        <option value="ME">
-                                                            Montenegro
-                                                        </option>
-                                                        <option value="MS">
-                                                            Montserrat
-                                                        </option>
-                                                        <option value="MA">
-                                                            Morocco
-                                                        </option>
-                                                        <option value="MZ">
-                                                            Mozambique
-                                                        </option>
-                                                        <option value="MM">
-                                                            Myanmar
-                                                        </option>
-                                                        <option value="NA">
-                                                            Namibia
-                                                        </option>
-                                                        <option value="NR">
-                                                            Nauru
-                                                        </option>
-                                                        <option value="NP">
-                                                            Nepal
-                                                        </option>
-                                                        <option value="NL">
-                                                            Netherlands
-                                                        </option>
-                                                        <option value="AN">
-                                                            Netherlands Antilles
-                                                        </option>
-                                                        <option value="NC">
-                                                            New Caledonia
-                                                        </option>
-                                                        <option value="NZ">
-                                                            New Zealand
-                                                        </option>
-                                                        <option value="NI">
-                                                            Nicaragua
-                                                        </option>
-                                                        <option value="NE">
-                                                            Niger
-                                                        </option>
-                                                        <option value="NG">
-                                                            Nigeria
-                                                        </option>
-                                                        <option value="NU">
-                                                            Niue
-                                                        </option>
-                                                        <option value="NF">
-                                                            Norfolk Island
-                                                        </option>
-                                                        <option value="KP">
-                                                            North Korea
-                                                        </option>
-                                                        <option value="NO">
-                                                            Norway
-                                                        </option>
-                                                        <option value="OM">
-                                                            Oman
-                                                        </option>
-                                                        <option value="PK">
-                                                            Pakistan
-                                                        </option>
-                                                        <option value="PS">
-                                                            Palestinian
-                                                            Territory
-                                                        </option>
-                                                        <option value="PA">
-                                                            Panama
-                                                        </option>
-                                                        <option value="PG">
-                                                            Papua New Guinea
-                                                        </option>
-                                                        <option value="PY">
-                                                            Paraguay
-                                                        </option>
-                                                        <option value="PE">
-                                                            Peru
-                                                        </option>
-                                                        <option value="PH">
-                                                            Philippines
-                                                        </option>
-                                                        <option value="PN">
-                                                            Pitcairn
-                                                        </option>
-                                                        <option value="PL">
-                                                            Poland
-                                                        </option>
-                                                        <option value="PT">
-                                                            Portugal
-                                                        </option>
-                                                        <option value="QA">
-                                                            Qatar
-                                                        </option>
-                                                        <option value="IE">
-                                                            Republic of Ireland
-                                                        </option>
-                                                        <option value="RE">
-                                                            Reunion
-                                                        </option>
-                                                        <option value="RO">
-                                                            Romania
-                                                        </option>
-                                                        <option value="RU">
-                                                            Russia
-                                                        </option>
-                                                        <option value="RW">
-                                                            Rwanda
-                                                        </option>
-                                                        <option value="ST">
-                                                            São Tomé and
-                                                            Príncipe
-                                                        </option>
-                                                        <option value="BL">
-                                                            Saint Barthélemy
-                                                        </option>
-                                                        <option value="SH">
-                                                            Saint Helena
-                                                        </option>
-                                                        <option value="KN">
-                                                            Saint Kitts and
-                                                            Nevis
-                                                        </option>
-                                                        <option value="LC">
-                                                            Saint Lucia
-                                                        </option>
-                                                        <option value="SX">
-                                                            Saint Martin (Dutch
-                                                            part)
-                                                        </option>
-                                                        <option value="MF">
-                                                            Saint Martin (French
-                                                            part)
-                                                        </option>
-                                                        <option value="PM">
-                                                            Saint Pierre and
-                                                            Miquelon
-                                                        </option>
-                                                        <option value="VC">
-                                                            Saint Vincent and
-                                                            the Grenadines
-                                                        </option>
-                                                        <option value="SM">
-                                                            San Marino
-                                                        </option>
-                                                        <option value="SA">
-                                                            Saudi Arabia
-                                                        </option>
-                                                        <option value="SN">
-                                                            Senegal
-                                                        </option>
-                                                        <option value="RS">
-                                                            Serbia
-                                                        </option>
-                                                        <option value="SC">
-                                                            Seychelles
-                                                        </option>
-                                                        <option value="SL">
-                                                            Sierra Leone
-                                                        </option>
-                                                        <option value="SG">
-                                                            Singapore
-                                                        </option>
-                                                        <option value="SK">
-                                                            Slovakia
-                                                        </option>
-                                                        <option value="SI">
-                                                            Slovenia
-                                                        </option>
-                                                        <option value="SB">
-                                                            Solomon Islands
-                                                        </option>
-                                                        <option value="SO">
-                                                            Somalia
-                                                        </option>
-                                                        <option value="ZA">
-                                                            South Africa
-                                                        </option>
-                                                        <option value="GS">
-                                                            South
-                                                            Georgia/Sandwich
-                                                            Islands
-                                                        </option>
-                                                        <option value="KR">
-                                                            South Korea
-                                                        </option>
-                                                        <option value="SS">
-                                                            South Sudan
-                                                        </option>
-                                                        <option value="ES">
-                                                            Spain
-                                                        </option>
-                                                        <option value="LK">
-                                                            Sri Lanka
-                                                        </option>
-                                                        <option value="SD">
-                                                            Sudan
-                                                        </option>
-                                                        <option value="SR">
-                                                            Suriname
-                                                        </option>
-                                                        <option value="SJ">
-                                                            Svalbard and Jan
-                                                            Mayen
-                                                        </option>
-                                                        <option value="SZ">
-                                                            Swaziland
-                                                        </option>
-                                                        <option value="SE">
-                                                            Sweden
-                                                        </option>
-                                                        <option value="CH">
-                                                            Switzerland
-                                                        </option>
-                                                        <option value="SY">
-                                                            Syria
-                                                        </option>
-                                                        <option value="TW">
-                                                            Taiwan
-                                                        </option>
-                                                        <option value="TJ">
-                                                            Tajikistan
-                                                        </option>
-                                                        <option value="TZ">
-                                                            Tanzania
-                                                        </option>
-                                                        <option value="TH">
-                                                            Thailand
-                                                        </option>
-                                                        <option value="TL">
-                                                            Timor-Leste
-                                                        </option>
-                                                        <option value="TG">
-                                                            Togo
-                                                        </option>
-                                                        <option value="TK">
-                                                            Tokelau
-                                                        </option>
-                                                        <option value="TO">
-                                                            Tonga
-                                                        </option>
-                                                        <option value="TT">
-                                                            Trinidad and Tobago
-                                                        </option>
-                                                        <option value="TN">
-                                                            Tunisia
-                                                        </option>
-                                                        <option value="TR">
-                                                            Turkey
-                                                        </option>
-                                                        <option value="TM">
-                                                            Turkmenistan
-                                                        </option>
-                                                        <option value="TC">
-                                                            Turks and Caicos
-                                                            Islands
-                                                        </option>
-                                                        <option value="TV">
-                                                            Tuvalu
-                                                        </option>
-                                                        <option value="UG">
-                                                            Uganda
-                                                        </option>
-                                                        <option value="UA">
-                                                            Ukraine
-                                                        </option>
-                                                        <option value="AE">
-                                                            United Arab Emirates
-                                                        </option>
-                                                        <option value="GB">
-                                                            United Kingdom (UK)
-                                                        </option>
-                                                        <option value="US">
-                                                            USA (US)
-                                                        </option>
-                                                        <option value="UY">
-                                                            Uruguay
-                                                        </option>
-                                                        <option value="UZ">
-                                                            Uzbekistan
-                                                        </option>
-                                                        <option value="VU">
-                                                            Vanuatu
-                                                        </option>
-                                                        <option value="VA">
-                                                            Vatican
-                                                        </option>
-                                                        <option value="VE">
-                                                            Venezuela
-                                                        </option>
-                                                        <option value="VN">
-                                                            Vietnam
-                                                        </option>
-                                                        <option value="WF">
-                                                            Wallis and Futuna
-                                                        </option>
-                                                        <option value="EH">
-                                                            Western Sahara
-                                                        </option>
-                                                        <option value="WS">
-                                                            Western Samoa
-                                                        </option>
-                                                        <option value="YE">
-                                                            Yemen
-                                                        </option>
-                                                        <option value="ZM">
-                                                            Zambia
-                                                        </option>
-                                                        <option value="ZW">
-                                                            Zimbabwe
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div className="form-group">
-                                                <input
-                                                    type="text"
-                                                    name="billing_address"
-                                                    required=""
-                                                    placeholder="Address *"
-                                                />
-                                            </div>
-                                            <div className="form-group">
-                                                <input
-                                                    type="text"
-                                                    name="billing_address2"
-                                                    required=""
-                                                    placeholder="Address line2"
-                                                />
-                                            </div>
-                                            <div className="form-group">
-                                                <input
-                                                    required=""
-                                                    type="text"
-                                                    name="city"
-                                                    placeholder="City / Town *"
-                                                />
-                                            </div>
-                                            <div className="form-group">
-                                                <input
-                                                    required=""
-                                                    type="text"
-                                                    name="state"
-                                                    placeholder="State / County *"
-                                                />
-                                            </div>
-                                            <div className="form-group">
-                                                <input
-                                                    required=""
-                                                    type="text"
-                                                    name="zipcode"
-                                                    placeholder="Postcode / ZIP *"
-                                                />
-                                            </div>
-                                        </div>
+                        {/* Right Column */}
+                        <div className="col-lg-4">
+
+                            {/* Order Summary */}
+                            <div
+                                className="border p-md-4 p-30 border-radius cart-totals mb-30"
+                                style={{ boxShadow: "0 0 10px rgba(0,0,0,0.05)", borderRadius: "15px" }}
+                            >
+                                <div className="heading_s1 mb-3">
+                                    <h4>Order Summary</h4>
+                                </div>
+                                <div className="p-2">
+                                    <div className="d-flex justify-content-between align-items-center mb-3">
+                                        <span className="text-muted">Items</span>
+                                        <span className="fw-bold">{cartItems.length}</span>
                                     </div>
-                                    <div className="form-group mb-30">
-                                        <textarea
-                                            rows="5"
-                                            placeholder="Order notes"
-                                        ></textarea>
+                                    <div className="d-flex justify-content-between align-items-center mb-3">
+                                        <span className="text-muted">Sub-Total</span>
+                                        <span className="font-lg fw-900 text-brand">${grossTotal.toFixed(2)}</span>
                                     </div>
-                                </form>
+                                    <div className="d-flex justify-content-between align-items-center mb-3">
+                                        <span className="text-muted">Delivery Fee</span>
+                                        <span className="font-lg fw-900 text-brand">${shipping.toFixed(2)}</span>
+                                    </div>
+                                    {discountAmount > 0 && (
+                                        <div className="d-flex justify-content-between align-items-center mb-3">
+                                            <span className="text-muted">Discount</span>
+                                            <span className="font-lg fw-900 text-brand">-${discountAmount.toFixed(2)}</span>
+                                        </div>
+                                    )}
+                                    <div className="border-top pt-3 d-flex justify-content-between align-items-center">
+                                        <span className="text-muted">Total</span>
+                                        <span className="font-xl fw-900 text-brand">${total.toFixed(2)}</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="col-lg-5">
-                                <div className="border p-40 cart-totals ml-30 mb-50">
-                                    <div className="d-flex align-items-end justify-content-between mb-30">
-                                        <h4>Your Order</h4>
-                                        <h6 className="text-muted">Subtotal</h6>
+
+                            {/* Payment Section */}
+                            <div className="mb-30">
+                                <h4 className="mb-3">Payment</h4>
+                                <p className="text-muted mb-3 font-sm">Please enter your mobile number to complete the payment process.</p>
+
+                                {/* Edahab */}
+                                <div className="payment-option mb-3">
+                                    <div className="form-check d-flex align-items-center gap-2">
+
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="paymentMethod"
+                                            id="edahab"
+                                            checked={paymentMethod === "edahab"}
+                                            onChange={() => setPaymentMethod("edahab")}
+                                            style={{ accentColor: "#84a606", width: "20px", height: "20px" }}
+                                        />
+                                        <img src="assets/imgs/theme/edahab.png" />
+                                        <label className="form-check-label fw-bold" htmlFor="edahab">
+                                            Edahab Marchent
+                                        </label>
                                     </div>
-                                    <div className="divider-2 mb-30"></div>
-                                    <div className="table-responsive order_table">
-                                        {cartItems.length <= 0 && "No Products"}
-                                        <table
-                                            className={
-                                                cartItems.length > 0
-                                                    ? "table no-border"
-                                                    : "d-none"
-                                            }
-                                        >
-                                            <tbody>
-                                                {cartItems.map((item, i) => (
-
-                                                        <tr key={i}>
-                                                            <td className="image product-thumbnail">
-                                                                <img
-                                                                    src={
-                                                                        item
-                                                                            .images[0]
-                                                                            .img
-                                                                    }
-                                                                    alt="#"
-                                                                />
-                                                            </td>
-                                                            <td>
-                                                                <h6 className="w-160 mb-5">
-                                                                    <a>
-                                                                        {
-                                                                            item.title
-                                                                        }
-                                                                    </a>
-                                                                    <div className="product-rate-cover">
-                                                                        <div className="product-rate d-inline-block">
-                                                                            <div
-                                                                                className="product-rating"
-                                                                                style={{
-                                                                                    width: "90%",
-                                                                                }}
-                                                                            ></div>
-                                                                        </div>
-                                                                        <span className="font-small ml-5 text-muted">
-                                                                            {" "}
-                                                                            (4.0)
-                                                                        </span>
-                                                                    </div>
-                                                                </h6>{" "}
-                                                            </td>
-                                                            <td>
-                                                                <h6 className="text-muted pl-20 pr-20">
-                                                                    x{" "}
-                                                                    {
-                                                                        item.quantity
-                                                                    }
-                                                                </h6>
-                                                            </td>
-                                                            <td>
-                                                                <h4 className="text-brand">
-                                                                    $$
-                                                                    {item.quantity *
-                                                                        item.price}
-                                                                </h4>
-                                                            </td>
-                                                        </tr>
-
-                                                ))}
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <div className="bt-1 border-color-1 mt-30 mb-30"></div>
-                                    <div className="payment_method">
-                                        <div className="mb-25">
-                                            <h5>Payment</h5>
-                                        </div>
-                                        <div className="payment_option">
-                                            <div className="custome-radio">
-                                                <input
-                                                    className="form-check-input"
-                                                    required=""
-                                                    type="radio"
-                                                    name="payment_option"
-                                                    id="exampleRadios3"
-                                                    defaultChecked={true}
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="exampleRadios3"
-                                                    data-bs-toggle="collapse"
-                                                    data-target="#bankTranfer"
-                                                    aria-controls="bankTranfer"
-                                                >
-                                                    Direct Bank Transfer
-                                                </label>
-                                                <div
-                                                    className="form-group collapse in"
-                                                    id="bankTranfer"
-                                                >
-                                                    <p className="text-muted mt-5">
-                                                        There are many
-                                                        variations of passages
-                                                        of Lorem Ipsum
-                                                        available, but the
-                                                        majority have suffered
-                                                        alteration.{" "}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div className="custome-radio">
-                                                <input
-                                                    className="form-check-input"
-                                                    required=""
-                                                    type="radio"
-                                                    name="payment_option"
-                                                    id="exampleRadios4"
-                                                    defaultChecked={true}
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="exampleRadios4"
-                                                    data-bs-toggle="collapse"
-                                                    data-target="#checkPayment"
-                                                    aria-controls="checkPayment"
-                                                >
-                                                    Check Payment
-                                                </label>
-                                                <div
-                                                    className="form-group collapse in"
-                                                    id="checkPayment"
-                                                >
-                                                    <p className="text-muted mt-5">
-                                                        Please send your cheque
-                                                        to Store Name, Store
-                                                        Street, Store Town,
-                                                        Store State / County,
-                                                        Store Postcode.{" "}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div className="custome-radio">
-                                                <input
-                                                    className="form-check-input"
-                                                    required=""
-                                                    type="radio"
-                                                    name="payment_option"
-                                                    id="exampleRadios5"
-                                                    defaultChecked={true}
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="exampleRadios5"
-                                                    data-bs-toggle="collapse"
-                                                    data-target="#paypal"
-                                                    aria-controls="paypal"
-                                                >
-                                                    Paypal
-                                                </label>
-                                                <div
-                                                    className="form-group collapse in"
-                                                    id="paypal"
-                                                >
-                                                    <p className="text-muted mt-5">
-                                                        Pay via PayPal; you can
-                                                        pay with your credit
-                                                        card if you don't have a
-                                                        PayPal account.
-                                                    </p>
+                                    {paymentMethod === "edahab" && (
+                                        <div className="mt-2 ml-20">
+                                            <p className="font-xs text-muted mb-2">Please complete your payment through Merchant No: <p style={{ fontWeight: "bold", display: "inline" }} >*113*083326*590# </p> and kindly confirm once done.</p>
+                                            <div className="qr-code mb-2">
+                                                {/* Placeholder for QR Code - using a generic icon if no QR code available, or just a box */}
+                                                <div style={{ width: "100px", height: "100px", background: "#f1f1f1", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                    <i className="fi-rs-apps" style={{ fontSize: "40px", color: "#ccc" }}></i>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <a
-                                        href="#"
-                                        className="btn btn-fill-out btn-block mt-30"
-                                    >
-                                        Place Order
-                                    </a>
+                                    )}
                                 </div>
+
+                                {/* WaafiPay */}
+                                <div className="payment-option mb-3">
+                                    <div className="form-check d-flex align-items-center gap-2">
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="paymentMethod"
+                                            id="waafipay"
+                                            checked={paymentMethod === "waafipay"}
+                                            onChange={() => setPaymentMethod("waafipay")}
+                                            style={{ accentColor: "#84a606", width: "20px", height: "20px" }}
+                                        />
+                                        <img src="assets/imgs/theme/wafi.png" />
+                                        <label className="form-check-label fw-bold" htmlFor="waafipay">
+                                            WaafiPay
+                                        </label>
+                                    </div>
+                                </div>
+
+                                {/* Premier Wallet */}
+                                <div className="payment-option mb-4">
+                                    <div className="form-check d-flex align-items-center gap-2">
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="paymentMethod"
+                                            id="premier"
+                                            checked={paymentMethod === "premier"}
+                                            onChange={() => setPaymentMethod("premier")}
+                                            style={{ accentColor: "#84a606", width: "20px", height: "20px" }}
+                                        />
+                                        <img src="assets/imgs/theme/wallet.png" />
+                                    </div>
+                                </div>
+
+                                {/* Phone Number */}
+                                <div className="form-group mb-4">
+                                    <label className="fw-bold mb-2">Phone Number *</label>
+                                    <div className="input-group">
+                                        <span className="input-group-text" style={{ backgroundColor: "#e9ecef", border: "1px solid #ececec" }}>
+                                            <i className="fi-rs-smartphone" style={{ marginRight: "5px" }}></i> +252
+                                        </span>
+                                        <input type="text" className="form-control" placeholder="Enter your Phone Number" style={{ borderLeft: "none" }} />
+                                    </div>
+                                </div>
+
+                                {/* Proceed Button */}
+                                <button
+                                    className="btn w-100 p-3"
+                                    style={{ backgroundColor: "#84a606", color: "white", borderRadius: "5px" }}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        router.push("/shop-order-track");
+                                    }}
+                                >
+                                    Proceed to Payment
+                                </button>
+
                             </div>
                         </div>
                     </div>
-                </section>
-            </Layout>
-        </>
+                </div>
+            </section>
+        </Layout>
     );
 };
 
 const mapStateToProps = (state) => ({
     cartItems: state.cart,
-    activeCart: state.counter,
 });
 
 const mapDispatchToProps = {
@@ -2059,4 +378,4 @@ const mapDispatchToProps = {
     clearCart,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Cart);
+export default connect(mapStateToProps, mapDispatchToProps)(Checkout);

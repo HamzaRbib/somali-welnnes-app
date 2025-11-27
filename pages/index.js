@@ -29,28 +29,6 @@ export default function Home() {
             <div className="section-title">
               <div className="title">
                 <h3>Featured Categories</h3>
-                <ul className="list-inline nav nav-tabs links">
-                  <li className="list-inline-item nav-item">
-                    <Link href="/products" className="nav-link">
-                      Cake & Milk
-                    </Link>
-                  </li>
-                  <li className="list-inline-item nav-item">
-                    <Link href="/products" className="nav-link">
-                      Coffes & Teas
-                    </Link>
-                  </li>
-                  <li className="list-inline-item nav-item">
-                    <Link href="/products" className="nav-link">
-                      Pet Foods
-                    </Link>
-                  </li>
-                  <li className="list-inline-item nav-item">
-                    <Link href="/products" className="nav-link">
-                      Vegetables
-                    </Link>
-                  </li>
-                </ul>
               </div>
             </div>
             <div className="carausel-10-columns-cover position-relative">

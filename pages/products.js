@@ -13,6 +13,7 @@ import SingleProduct from "./../components/ecommerce/SingleProduct";
 import Layout from "./../components/layout/Layout";
 import { fetchProduct } from "./../redux/action/product";
 import Rating from "../components/ecommerce/Filter/Rating";
+import AdditionalFilters from "../components/ecommerce/Filter/AdditionalFilters";
 
 const Products = ({ products, productFilters, fetchProduct }) => {
   // console.log(products);
@@ -141,86 +142,15 @@ const Products = ({ products, productFilters, fetchProduct }) => {
                       <br />
                     </div>
                   </div>
-                  {/* <div className="list-group">
-                    <div className="list-group-item mb-10 mt-10">
-                      <label className="fw-900">Color</label>
-                      <label className="fw-900 mt-15">Item Condition</label>
-                      <SizeFilter />
-                    </div>
-                  </div> */}
                   <br />
                 </div>
 
                 <div className="mb-30 p-2">
                   <Rating />
+                  <AdditionalFilters />
                 </div>
 
-                <div className="sidebar-widget product-sidebar  mb-30 p-30 bg-grey border-radius-10">
-                  <h5 className="section-title style-1 mb-30">New products</h5>
-                  <div className="single-post clearfix">
-                    <div className="image">
-                      <img src="/assets/imgs/shop/thumbnail-3.jpg" alt="#" />
-                    </div>
-                    <div className="content pt-10">
-                      <h5>
-                        <a>Chen Cardigan</a>
-                      </h5>
-                      <p className="price mb-0 mt-5">$99.50</p>
-                      <div className="product-rate">
-                        <div
-                          className="product-rating"
-                          style={{ width: "90%" }}
-                        ></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="single-post clearfix">
-                    <div className="image">
-                      <img src="/assets/imgs/shop/thumbnail-4.jpg" alt="#" />
-                    </div>
-                    <div className="content pt-10">
-                      <h6>
-                        <a>Chen Sweater</a>
-                      </h6>
-                      <p className="price mb-0 mt-5">$89.50</p>
-                      <div className="product-rate">
-                        <div
-                          className="product-rating"
-                          style={{ width: "80%" }}
-                        ></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="single-post clearfix">
-                    <div className="image">
-                      <img src="/assets/imgs/shop/thumbnail-5.jpg" alt="#" />
-                    </div>
-                    <div className="content pt-10">
-                      <h6>
-                        <a>Colorful Jacket</a>
-                      </h6>
-                      <p className="price mb-0 mt-5">$25</p>
-                      <div className="product-rate">
-                        <div
-                          className="product-rating"
-                          style={{ width: "60%" }}
-                        ></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="banner-img wow fadeIn mb-lg-0 animated d-lg-block d-none">
-                  <img src="/assets/imgs/banner/banner-11.png" alt="nest" />
-                  <div className="banner-text">
-                    <span>Oganic</span>
-                    <h4>
-                      Save 17% <br />
-                      on <span className="text-brand">Oganic</span>
-                      <br />
-                      Juice
-                    </h4>
-                  </div>
-                </div>
+
               </div>
             </div>
           </div>

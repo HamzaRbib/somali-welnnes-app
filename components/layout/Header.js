@@ -33,12 +33,6 @@ const Header = ({
   return (
     <>
       <header className="header-area header-style-1 header-height-2">
-        <div className="mobile-promotion">
-          <span>
-            Grand opening, <strong>up to 15%</strong> off all items. Only{" "}
-            <strong>3 days</strong> left
-          </span>
-        </div>
         {/* <div className="header-top header-top-ptb-1 d-none d-lg-block">
                     <div className="container">
                         <div className="row align-items-center">

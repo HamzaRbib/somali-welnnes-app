@@ -103,11 +103,14 @@ const CategorySlider = () => {
         }}
         className="custom-class"
         breakpoints={{
+          0: {
+            slidesPerView: 3,
+          },
           480: {
-            slidesPerView: 2,
+            slidesPerView: 4,
           },
           640: {
-            slidesPerView: 3,
+            slidesPerView: 4,
           },
           768: {
             slidesPerView: 5,
@@ -139,18 +142,6 @@ const CategorySlider = () => {
           </SwiperSlide>
         ))}
       </Swiper>
-
-      <div
-        className="slider-arrow slider-arrow-2 flex-right carausel-10-columns-arrow"
-        id="carausel-10-columns-arrows"
-      >
-        <span className="slider-btn slider-prev slick-arrow custom_prev_ct1">
-          <i className="fi-rs-arrow-small-left"></i>
-        </span>
-        <span className="slider-btn slider-next slick-arrow custom_next_ct1">
-          <i className="fi-rs-arrow-small-right"></i>
-        </span>
-      </div>
     </>
   );
 };
