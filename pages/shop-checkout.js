@@ -350,7 +350,7 @@ const Checkout = ({
                                     style={{ backgroundColor: "#84a606", color: "white", borderRadius: "5px" }}
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        router.push("/shop-order-track");
+                                        router.push("/shop-track-order");
                                     }}
                                 >
                                     Proceed to Payment
